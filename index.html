@@ -2,932 +2,197 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fck is the dough @</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 30px;
-        }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-        }
-        
-        .upload-section {
-            background: #f8f9fa;
-            border: 2px dashed #ddd;
-            border-radius: 8px;
-            padding: 30px;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .upload-section.dragover {
-            border-color: #4285f4;
-            background: #e8f0fe;
-        }
-        
-        input[type="file"] {
-            display: none;
-        }
-        
-        .upload-btn {
-            background: #4285f4;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 10px;
-        }
-        
-        .upload-btn:hover {
-            background: #3367d6;
-        }
-        
-        .search-controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .control-group {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        label {
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #333;
-            font-size: 14px;
-        }
-        
-        input, select {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .search-btn {
-            background: #34a853;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            margin-top: 20px;
-        }
-        
-        .search-btn:hover {
-            background: #2d8e47;
-        }
-        
-        .search-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        
-        .status {
-            padding: 15px;
-            border-radius: 4px;
-            margin: 15px 0;
-            font-weight: 500;
-        }
-        
-        .status.info {
-            background: #e8f0fe;
-            color: #1967d2;
-        }
-        
-        .status.success {
-            background: #e6f4ea;
-            color: #1e8e3e;
-        }
-        
-        .status.error {
-            background: #fce8e6;
-            color: #d93025;
-        }
-        
-        .resume-preview {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        
-        .resume-preview h3 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .keywords {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        
-        .keyword {
-            background: #4285f4;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 16px;
-            font-size: 13px;
-        }
-        
-        .results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 20px 0;
-        }
-        
-        .export-btn {
-            background: #fbbc04;
-            color: #333;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        
-        .export-btn:hover {
-            background: #f9ab00;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        
-        th {
-            background: #f8f9fa;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            border-bottom: 2px solid #ddd;
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        th:hover {
-            background: #e8eaed;
-        }
-        
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        tr:hover {
-            background: #f8f9fa;
-        }
-        
-        .match-score {
-            font-weight: 600;
-            padding: 4px 8px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-        
-        .ats-score {
-            font-weight: 600;
-            padding: 4px 8px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-        
-        .match-high {
-            background: #e6f4ea;
-            color: #1e8e3e;
-        }
-        
-        .match-medium {
-            background: #fef7e0;
-            color: #ea8600;
-        }
-        
-        .match-low {
-            background: #f1f3f4;
-            color: #5f6368;
-        }
-        
-        .ats-high {
-            background: #e6f4ea;
-            color: #1e8e3e;
-        }
-        
-        .ats-medium {
-            background: #fef7e0;
-            color: #ea8600;
-        }
-        
-        .ats-low {
-            background: #fce8e6;
-            color: #d93025;
-        }
-        
-        .applied-checkbox {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-        
-        .applied-row {
-            background: #e8f5e9 !important;
-        }
-        
-        .applied-label {
-            color: #1e8e3e;
-            font-weight: 600;
-            font-size: 12px;
-        }
-        
-        .job-link {
-            color: #4285f4;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .job-link:hover {
-            text-decoration: underline;
-        }
-        
-        .company-priority {
-            background: #ea4335;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 11px;
-            margin-left: 8px;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 40px;
-        }
-        
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #4285f4;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .no-results {
-            text-align: center;
-            padding: 60px 20px;
-            color: #666;
-        }
-        
-        .filters {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        
-        .filter-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #000; color: #fff; }
+        .glass { background: rgba(24, 24, 27, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.2); }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 10px; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>💰 Fck is the dough @</h1>
-        <p class="subtitle">Upload your resume and find matching opportunities</p>
+<body class="min-h-screen pb-20 px-4">
+
+    <header class="py-12 text-center">
+        <h1 class="text-6xl md:text-8xl font-black text-purple-600 tracking-tighter italic uppercase drop-shadow-[0_0_20px_rgba(124,58,237,0.4)]">
+            Fck is the dough @
+        </h1>
+        <p class="text-zinc-500 font-mono mt-2 uppercase tracking-[0.4em] text-[10px]">ATS Optimization • Live Search • Dough Tracker</p>
+    </header>
+
+    <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6">
         
-        <div class="upload-section" id="uploadSection">
-            <h3>📄 Upload Resume</h3>
-            <p style="margin: 10px 0; color: #666;">Drag and drop your resume here, or click to browse</p>
-            <input type="file" id="resumeInput" accept=".pdf,.doc,.docx,.txt">
-            <button class="upload-btn" onclick="document.getElementById('resumeInput').click()">
-                Choose File
-            </button>
-            <p id="fileName" style="margin-top: 10px; color: #666;"></p>
-        </div>
-        
-        <div id="resumePreview" style="display: none;"></div>
-        
-        <div class="search-controls">
-            <div class="control-group">
-                <label for="jobTitle">Job Title/Keywords</label>
-                <input type="text" id="jobTitle" placeholder="e.g., Operations Manager, Program Manager">
+        <div class="lg:col-span-1 space-y-4">
+            <div class="glass p-6 rounded-[30px] shadow-2xl">
+                <label class="text-[10px] font-black text-purple-400 uppercase tracking-widest">Serper.dev Key</label>
+                <input type="password" id="apiKey" placeholder="Key from serper.dev" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-xs mt-1 mb-4 focus:border-purple-500 outline-none">
+                
+                <label class="text-[10px] font-black text-purple-400 uppercase tracking-widest">Resume (PDF)</label>
+                <input type="file" id="resumeUpload" accept=".pdf" class="block w-full text-[10px] text-zinc-500 file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-purple-600 file:text-white file:font-bold cursor-pointer mt-1"/>
             </div>
-            
-            <div class="control-group">
-                <label for="location">Location</label>
-                <input type="text" id="location" placeholder="e.g., Washington DC, Remote">
-            </div>
-            
-            <div class="control-group">
-                <label for="company">Company (Optional)</label>
-                <input type="text" id="company" placeholder="e.g., Google, Meta, Microsoft">
-            </div>
-            
-            <div class="control-group">
-                <label for="experienceLevel">Experience Level</label>
-                <select id="experienceLevel">
-                    <option value="">Any</option>
-                    <option value="entry">Entry Level</option>
-                    <option value="mid">Mid Level</option>
-                    <option value="senior" selected>Senior Level</option>
-                    <option value="director">Director+</option>
-                </select>
-            </div>
-        </div>
-        
-        <button class="search-btn" id="searchBtn" onclick="searchJobs()">
-            🔍 Search Jobs
-        </button>
-        
-        <div id="statusMessage"></div>
-        
-        <div id="resultsSection" style="display: none;">
-            <div class="results-header">
-                <h2 id="resultsCount">Found 0 jobs</h2>
-                <button class="export-btn" onclick="exportToCSV()">
-                    📊 Export to CSV
+
+            <div class="glass p-6 rounded-[30px] space-y-4">
+                <input type="text" id="filterTitle" placeholder="Job Title" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm outline-none focus:border-purple-600">
+                <input type="text" id="filterLoc" placeholder="Location (Remote)" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm outline-none focus:border-purple-600">
+                <button onclick="fetchJobs()" class="w-full bg-purple-600 hover:bg-white hover:text-black font-black py-4 rounded-2xl transition-all uppercase tracking-widest text-xs shadow-lg shadow-purple-600/30">
+                    Search Market
                 </button>
             </div>
-            
-            <div class="filters">
-                <div class="filter-row">
-                    <div class="control-group">
-                        <label for="filterCompany">Filter by Company</label>
-                        <select id="filterCompany" onchange="applyFilters()">
-                            <option value="">All Companies</option>
-                        </select>
-                    </div>
-                    
-                    <div class="control-group">
-                        <label for="filterLocation">Filter by Location</label>
-                        <select id="filterLocation" onchange="applyFilters()">
-                            <option value="">All Locations</option>
-                        </select>
-                    </div>
-                    
-                    <div class="control-group">
-                        <label for="filterMatch">Minimum Match Score</label>
-                        <select id="filterMatch" onchange="applyFilters()">
-                            <option value="0">Any Match</option>
-                            <option value="60">60%+</option>
-                            <option value="70">70%+</option>
-                            <option value="80">80%+</option>
-                        </select>
-                    </div>
-                    
-                    <div class="control-group">
-                        <label for="sortBy">Sort By</label>
-                        <select id="sortBy" onchange="applyFilters()">
-                            <option value="match">Match Score</option>
-                            <option value="date">Date Posted</option>
-                            <option value="company">Company</option>
-                        </select>
+        </div>
+
+        <div class="lg:col-span-3 space-y-12">
+            <section>
+                <h2 class="text-xs font-black uppercase tracking-[0.3em] mb-6 text-zinc-500 border-b border-zinc-900 pb-2">Live Opportunities</h2>
+                <div id="jobFeed" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="col-span-full border-2 border-dashed border-zinc-800 rounded-[40px] py-24 text-center text-zinc-700 font-black uppercase tracking-widest">
+                        Awaiting Search...
                     </div>
                 </div>
+            </section>
+
+            <section>
+                <h2 class="text-xs font-black uppercase tracking-[0.3em] mb-6 text-purple-500 border-b border-purple-900/30 pb-2">The Vault (Saved Leads)</h2>
+                <div id="vaultFeed" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    </div>
+            </section>
+        </div>
+    </main>
+
+    <div id="modal" class="hidden fixed inset-0 bg-black/95 flex items-center justify-center p-6 z-50 backdrop-blur-md">
+        <div class="bg-zinc-900 border border-purple-500/30 p-8 rounded-[40px] max-w-2xl w-full">
+            <h2 id="modalTitle" class="text-3xl font-black mb-2 uppercase italic text-purple-500"></h2>
+            <p id="modalSub" class="text-zinc-500 text-xs font-mono mb-6 uppercase tracking-widest"></p>
+            <div id="modalBody" class="w-full h-64 bg-black border border-zinc-800 p-6 rounded-3xl text-sm font-mono text-zinc-300 mb-6 overflow-y-auto whitespace-pre-wrap leading-relaxed"></div>
+            <div class="flex gap-4">
+                <button id="copyBtn" class="flex-1 bg-white text-black font-black py-4 rounded-2xl uppercase text-xs hover:bg-purple-500 hover:text-white">Copy</button>
+                <button onclick="closeModal()" class="flex-1 bg-zinc-800 text-white font-black py-4 rounded-2xl uppercase text-xs">Dismiss</button>
             </div>
-            
-            <div id="resultsTable"></div>
         </div>
     </div>
 
     <script>
-        let resumeData = null;
-        let allJobs = [];
-        let filteredJobs = [];
-        const priorityCompanies = ['google', 'meta', 'microsoft', 'amazon', 'apple'];
-        let appliedJobs = new Set(); // Track which jobs have been applied to
-        
-        // Load applied jobs from localStorage on startup
-        function loadAppliedJobs() {
-            const saved = localStorage.getItem('appliedJobs');
-            if (saved) {
-                appliedJobs = new Set(JSON.parse(saved));
-            }
-        }
-        
-        // Save applied jobs to localStorage
-        function saveAppliedJobs() {
-            localStorage.setItem('appliedJobs', JSON.stringify([...appliedJobs]));
-        }
-        
-        // Load on page load
-        loadAppliedJobs();
-        
-        // File upload handling
-        const uploadSection = document.getElementById('uploadSection');
-        const resumeInput = document.getElementById('resumeInput');
-        const fileName = document.getElementById('fileName');
-        
-        uploadSection.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadSection.classList.add('dragover');
-        });
-        
-        uploadSection.addEventListener('dragleave', () => {
-            uploadSection.classList.remove('dragover');
-        });
-        
-        uploadSection.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadSection.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                handleFileUpload(files[0]);
-            }
-        });
-        
-        resumeInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFileUpload(e.target.files[0]);
-            }
-        });
-        
-        function handleFileUpload(file) {
-            fileName.textContent = `Selected: ${file.name}`;
+        let resumeText = "";
+        let resumeWords = [];
+        let savedJobs = JSON.parse(localStorage.getItem('doughVault')) || [];
+
+        // 1. Initialize Vault
+        renderVault();
+
+        // 2. PDF Parsing
+        document.getElementById('resumeUpload').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
             const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                const text = e.target.result;
-                parseResume(text, file.name);
+            reader.onload = async function() {
+                const typedarray = new Uint8Array(this.result);
+                const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                let text = "";
+                for(let i=1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const content = await page.getTextContent();
+                    text += content.items.map(item => item.str).join(" ");
+                }
+                resumeText = text.toLowerCase();
+                resumeWords = text.toLowerCase().match(/\b(\w{3,})\b/g) || [];
             };
-            
-            reader.readAsText(file);
-        }
-        
-        function parseResume(text, filename) {
-            // Extract keywords and skills from resume
-            const keywords = extractKeywords(text);
-            
-            resumeData = {
-                filename: filename,
-                fullText: text,
-                keywords: keywords,
-                skills: extractSkills(text),
-                experience: extractExperience(text)
-            };
-            
-            displayResumePreview();
-            showStatus('Resume processed successfully! Ready to search.', 'success');
-            
-            // Auto-populate search fields
-            document.getElementById('jobTitle').value = suggestJobTitles(text);
-        }
-        
-        function extractKeywords(text) {
-            // Common tech/operations keywords
-            const commonKeywords = [
-                'operations', 'program manager', 'strategic', 'data', 'sql', 'tableau',
-                'aws', 'leadership', 'cross-functional', 'analytics', 'compliance',
-                'government', 'policy', 'budget', 'stakeholder', 'transformation',
-                'p&l', 'customer experience', 'digital', 'automation', 'project management',
-                'regulatory', 'licensing', 'azure', 'cloud', 'logistics', 'risk management'
-            ];
-            
-            const found = commonKeywords.filter(keyword => 
-                text.toLowerCase().includes(keyword.toLowerCase())
-            );
-            
-            return [...new Set(found)].slice(0, 15);
-        }
-        
-        function extractSkills(text) {
-            const skillPatterns = [
-                'SQL', 'Tableau', 'AWS', 'Azure', 'Python', 'Excel', 'PowerBI',
-                'Salesforce', 'SAP', 'Project Management', 'Agile', 'Scrum'
-            ];
-            
-            return skillPatterns.filter(skill => 
-                text.toLowerCase().includes(skill.toLowerCase())
-            );
-        }
-        
-        function extractExperience(text) {
-            // Simple experience level detection
-            if (text.includes('Director') || text.includes('Senior Director')) return 'director';
-            if (text.includes('Senior') || text.includes('Lead')) return 'senior';
-            if (text.includes('Deputy')) return 'senior';
-            return 'mid';
-        }
-        
-        function suggestJobTitles(text) {
-            if (text.toLowerCase().includes('program manager') || text.toLowerCase().includes('operations')) {
-                return 'Program Manager, Operations Manager';
-            }
-            return '';
-        }
-        
-        function displayResumePreview() {
-            const preview = document.getElementById('resumePreview');
-            preview.style.display = 'block';
-            preview.innerHTML = `
-                <div class="resume-preview">
-                    <h3>✅ Resume Loaded: ${resumeData.filename}</h3>
-                    <p><strong>Detected Keywords:</strong></p>
-                    <div class="keywords">
-                        ${resumeData.keywords.map(kw => `<span class="keyword">${kw}</span>`).join('')}
-                    </div>
-                </div>
-            `;
-        }
-        
-        function showStatus(message, type) {
-            const statusDiv = document.getElementById('statusMessage');
-            statusDiv.className = `status ${type}`;
-            statusDiv.textContent = message;
-            statusDiv.style.display = 'block';
-        }
-        
-        async function searchJobs() {
-            const jobTitle = document.getElementById('jobTitle').value;
-            const location = document.getElementById('location').value;
-            const company = document.getElementById('company').value;
-            
-            if (!jobTitle && !resumeData) {
-                showStatus('Please upload a resume or enter job keywords', 'error');
-                return;
-            }
-            
-            showStatus('Searching for jobs...', 'info');
-            document.getElementById('searchBtn').disabled = true;
+            reader.readAsArrayBuffer(file);
+        });
+
+        // 3. Search
+        async function fetchJobs() {
+            const key = document.getElementById('apiKey').value;
+            const feed = document.getElementById('jobFeed');
+            if(!key) return alert("Missing API Key!");
+            feed.innerHTML = `<div class="col-span-full text-center py-24 text-purple-600 font-black animate-pulse text-2xl uppercase italic">Scanning...</div>`;
             
             try {
-                // Combine multiple job sources
-                const jobs = await Promise.all([
-                    fetchGoogleJobs(jobTitle, location, company),
-                    fetchIndeedJobs(jobTitle, location, company),
-                    fetchRemoteOKJobs(jobTitle)
-                ]);
-                
-                allJobs = jobs.flat();
-                
-                // Calculate match scores if resume is uploaded
-                if (resumeData) {
-                    allJobs = allJobs.map(job => ({
-                        ...job,
-                        matchScore: calculateMatchScore(job, resumeData),
-                        atsScore: calculateATSScore(job, resumeData)
-                    }));
-                }
-                
-                // Sort by match score
-                allJobs.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
-                
-                filteredJobs = [...allJobs];
-                displayResults();
-                
-                showStatus(`Found ${allJobs.length} matching jobs!`, 'success');
-            } catch (error) {
-                showStatus('Error searching jobs. Please try again.', 'error');
-                console.error(error);
-            } finally {
-                document.getElementById('searchBtn').disabled = false;
-            }
-        }
-        
-        async function fetchGoogleJobs(title, location, company) {
-            // Using Google Jobs API via SerpAPI-like structure
-            // In production, you'd use actual API keys
-            const query = `${title} ${company} ${location}`.trim();
-            
-            // Mock data for demonstration - in production, use real API
-            return generateMockJobs('Google Jobs API', query, 10);
-        }
-        
-        async function fetchIndeedJobs(title, location, company) {
-            // Mock Indeed data
-            return generateMockJobs('Indeed', `${title} ${location}`, 8);
-        }
-        
-        async function fetchRemoteOKJobs(title) {
-            // Mock Remote OK data
-            return generateMockJobs('RemoteOK', title, 5);
-        }
-        
-        function generateMockJobs(source, query, count) {
-            const companies = [
-                'Google', 'Meta', 'Microsoft', 'Amazon', 'Apple', 'Salesforce',
-                'Adobe', 'Oracle', 'SAP', 'IBM', 'Cisco', 'Intel', 'NVIDIA'
-            ];
-            
-            const titles = [
-                'Senior Program Manager, Operations',
-                'Strategic Operations Manager',
-                'Senior Operations Lead',
-                'Program Manager, Strategic Initiatives',
-                'Operations Manager, Data Centers',
-                'Chief of Staff, Operations',
-                'Senior Manager, Business Operations',
-                'Director of Strategic Programs',
-                'Operations Manager, Cloud Infrastructure',
-                'Program Manager, Risk & Compliance'
-            ];
-            
-            const locations = [
-                'Washington, DC', 'Remote', 'Seattle, WA', 'San Francisco, CA',
-                'New York, NY', 'Austin, TX', 'Boston, MA', 'Chicago, IL'
-            ];
-            
-            const jobs = [];
-            for (let i = 0; i < count; i++) {
-                const company = companies[Math.floor(Math.random() * companies.length)];
-                jobs.push({
-                    id: `${source}-${Date.now()}-${i}`,
-                    title: titles[Math.floor(Math.random() * titles.length)],
-                    company: company,
-                    location: locations[Math.floor(Math.random() * locations.length)],
-                    salary: Math.random() > 0.3 ? `$${120 + Math.floor(Math.random() * 80)}K - $${180 + Math.floor(Math.random() * 120)}K` : 'Not specified',
-                    url: `https://careers.${company.toLowerCase().replace(/\s/g, '')}.com/job/${i}`,
-                    datePosted: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                    description: `Lead cross-functional teams, manage strategic operations initiatives, drive data-driven decisions using SQL and analytics tools. Strong stakeholder management and P&L accountability required.`,
-                    source: source
+                const query = `${document.getElementById('filterTitle').value} jobs ${document.getElementById('filterLoc').value}`;
+                const res = await fetch("https://google.serper.dev/search", {
+                    method: 'POST',
+                    headers: { 'X-API-KEY': key, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ q: query })
                 });
-            }
-            
-            return jobs;
+                const data = await res.json();
+                renderJobs(data.organic || []);
+            } catch (err) { feed.innerHTML = "Error loading jobs."; }
         }
-        
-        function calculateMatchScore(job, resume) {
-            let score = 0;
-            const jobText = `${job.title} ${job.description} ${job.company}`.toLowerCase();
-            
-            // Keyword matching
-            const matchedKeywords = resume.keywords.filter(kw => 
-                jobText.includes(kw.toLowerCase())
-            );
-            score += (matchedKeywords.length / resume.keywords.length) * 60;
-            
-            // Priority company boost
-            if (priorityCompanies.some(pc => job.company.toLowerCase().includes(pc))) {
-                score += 20;
-            }
-            
-            // Location preference (DC area or Remote)
-            if (job.location.includes('DC') || job.location.includes('Remote')) {
-                score += 10;
-            }
-            
-            // Senior level preference
-            if (job.title.toLowerCase().includes('senior') || 
-                job.title.toLowerCase().includes('director') ||
-                job.title.toLowerCase().includes('lead')) {
-                score += 10;
-            }
-            
-            return Math.min(Math.round(score), 100);
-        }
-        
-        function calculateATSScore(job, resume) {
-            let score = 0;
-            const jobText = `${job.title} ${job.description}`.toLowerCase();
-            const resumeText = resume.fullText.toLowerCase();
-            
-            // 1. Keyword Density (40 points)
-            const jobKeywords = extractJobKeywords(job);
-            const matchedKeywords = jobKeywords.filter(kw => resumeText.includes(kw.toLowerCase()));
-            score += (matchedKeywords.length / Math.max(jobKeywords.length, 1)) * 40;
-            
-            // 2. Technical Skills Match (30 points)
-            const technicalTerms = ['sql', 'tableau', 'aws', 'azure', 'python', 'excel', 
-                                   'project management', 'agile', 'scrum', 'salesforce'];
-            const jobTechTerms = technicalTerms.filter(term => jobText.includes(term));
-            const resumeTechTerms = technicalTerms.filter(term => resumeText.includes(term));
-            const techMatch = jobTechTerms.filter(term => resumeTechTerms.includes(term));
-            if (jobTechTerms.length > 0) {
-                score += (techMatch.length / jobTechTerms.length) * 30;
-            } else {
-                score += 30; // No tech requirements
-            }
-            
-            // 3. Title/Role Alignment (20 points)
-            const jobTitleWords = job.title.toLowerCase().split(/\s+/);
-            const resumeTitleMatch = jobTitleWords.filter(word => 
-                resumeText.includes(word) && word.length > 3
-            );
-            score += (resumeTitleMatch.length / Math.max(jobTitleWords.length, 1)) * 20;
-            
-            // 4. Experience Level Match (10 points)
-            const hasExperienceMatch = 
-                (job.title.toLowerCase().includes('senior') && resumeText.includes('senior')) ||
-                (job.title.toLowerCase().includes('director') && resumeText.includes('director')) ||
-                (job.title.toLowerCase().includes('lead') && resumeText.includes('lead'));
-            if (hasExperienceMatch) score += 10;
-            
-            return Math.min(Math.round(score), 100);
-        }
-        
-        function extractJobKeywords(job) {
-            // Extract key terms from job description
-            const text = `${job.title} ${job.description}`.toLowerCase();
-            const keywords = [];
-            
-            const commonTerms = [
-                'operations', 'program', 'strategic', 'data', 'analytics', 'leadership',
-                'cross-functional', 'stakeholder', 'budget', 'compliance', 'policy',
-                'transformation', 'customer', 'digital', 'automation', 'project',
-                'regulatory', 'risk', 'logistics', 'cloud', 'experience'
-            ];
-            
-            commonTerms.forEach(term => {
-                if (text.includes(term)) keywords.push(term);
-            });
-            
-            return keywords;
-        }
-        
-        function displayResults() {
-            const resultsSection = document.getElementById('resultsSection');
-            resultsSection.style.display = 'block';
-            
-            document.getElementById('resultsCount').textContent = `Found ${filteredJobs.length} jobs`;
-            
-            // Populate filter dropdowns
-            populateFilters();
-            
-            // Create table
-            let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th onclick="sortTable('matchScore')">Match %</th>
-                            <th onclick="sortTable('atsScore')">ATS Score</th>
-                            <th onclick="sortTable('title')">Job Title</th>
-                            <th onclick="sortTable('company')">Company</th>
-                            <th onclick="sortTable('location')">Location</th>
-                            <th onclick="sortTable('salary')">Salary</th>
-                            <th onclick="sortTable('datePosted')">Posted</th>
-                            <th>Applied</th>
-                            <th>Link</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            filteredJobs.forEach(job => {
-                const matchClass = job.matchScore >= 80 ? 'match-high' : 
-                                  job.matchScore >= 60 ? 'match-medium' : 'match-low';
-                const atsClass = job.atsScore >= 75 ? 'ats-high' :
-                                job.atsScore >= 50 ? 'ats-medium' : 'ats-low';
-                const isPriority = priorityCompanies.some(pc => job.company.toLowerCase().includes(pc));
-                const isApplied = appliedJobs.has(job.id);
-                const rowClass = isApplied ? 'applied-row' : '';
+
+        // 4. Render Jobs
+        function renderJobs(jobs) {
+            const feed = document.getElementById('jobFeed');
+            feed.innerHTML = "";
+            jobs.forEach((job, idx) => {
+                const jobDesc = (job.snippet || "").toLowerCase();
+                const matches = [...new Set(resumeWords)].filter(w => jobDesc.includes(w)).length;
+                const score = Math.min(Math.round((matches / 15) * 100), 98);
                 
-                html += `
-                    <tr class="${rowClass}">
-                        <td><span class="match-score ${matchClass}">${job.matchScore || 'N/A'}%</span></td>
-                        <td><span class="ats-score ${atsClass}">${job.atsScore || 'N/A'}%</span></td>
-                        <td><strong>${job.title}</strong></td>
-                        <td>
-                            ${job.company}
-                            ${isPriority ? '<span class="company-priority">TARGET</span>' : ''}
-                        </td>
-                        <td>${job.location}</td>
-                        <td>${job.salary}</td>
-                        <td>${job.datePosted}</td>
-                        <td>
-                            <input type="checkbox" 
-                                   class="applied-checkbox" 
-                                   ${isApplied ? 'checked' : ''}
-                                   onchange="toggleApplied('${job.id}', this.checked)">
-                            ${isApplied ? '<div class="applied-label">✓ Applied</div>' : ''}
-                        </td>
-                        <td><a href="${job.url}" target="_blank" class="job-link">Apply →</a></td>
-                    </tr>
-                `;
+                feed.innerHTML += `
+                    <div class="glass p-8 rounded-[35px] hover:border-purple-600 transition-all group">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="text-3xl font-black ${score > 60 ? 'text-green-500' : 'text-purple-600'}">${score}%</div>
+                            <button onclick="saveToVault('${btoa(job.title)}', '${job.link}')" class="text-xs font-black text-purple-400 hover:text-white uppercase">Save To Vault +</button>
+                        </div>
+                        <h3 class="font-black text-xl mb-1 truncate">${job.title}</h3>
+                        <p class="text-xs text-zinc-500 mb-6 line-clamp-2">${job.snippet}</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="roastResume('${job.title}', '${job.snippet.replace(/'/g, "\\'")}')" class="bg-zinc-900 border border-zinc-800 text-[10px] font-black uppercase py-3 rounded-xl hover:bg-red-900/20">Roast</button>
+                            <a href="${job.link}" target="_blank" class="bg-purple-600 text-[10px] font-black uppercase py-3 rounded-xl text-center">Apply</a>
+                        </div>
+                    </div>`;
             });
-            
-            html += `
-                    </tbody>
-                </table>
-            `;
-            
-            document.getElementById('resultsTable').innerHTML = html;
         }
-        
-        function populateFilters() {
-            // Companies
-            const companies = [...new Set(allJobs.map(j => j.company))].sort();
-            const companySelect = document.getElementById('filterCompany');
-            companySelect.innerHTML = '<option value="">All Companies</option>' +
-                companies.map(c => `<option value="${c}">${c}</option>`).join('');
-            
-            // Locations
-            const locations = [...new Set(allJobs.map(j => j.location))].sort();
-            const locationSelect = document.getElementById('filterLocation');
-            locationSelect.innerHTML = '<option value="">All Locations</option>' +
-                locations.map(l => `<option value="${l}">${l}</option>`).join('');
+
+        // 5. Vault Logic
+        function saveToVault(titleB64, link) {
+            const title = atob(titleB64);
+            if(savedJobs.find(j => j.link === link)) return alert("Already in the vault!");
+            savedJobs.push({ title, link, date: new Date().toLocaleDateString() });
+            localStorage.setItem('doughVault', JSON.stringify(savedJobs));
+            renderVault();
         }
-        
-        function applyFilters() {
-            const companyFilter = document.getElementById('filterCompany').value;
-            const locationFilter = document.getElementById('filterLocation').value;
-            const matchFilter = parseInt(document.getElementById('filterMatch').value);
-            const sortBy = document.getElementById('sortBy').value;
-            
-            filteredJobs = allJobs.filter(job => {
-                if (companyFilter && job.company !== companyFilter) return false;
-                if (locationFilter && job.location !== locationFilter) return false;
-                if (matchFilter && (job.matchScore || 0) < matchFilter) return false;
-                return true;
-            });
-            
-            // Sort
-            filteredJobs.sort((a, b) => {
-                if (sortBy === 'match') return (b.matchScore || 0) - (a.matchScore || 0);
-                if (sortBy === 'date') return new Date(b.datePosted) - new Date(a.datePosted);
-                if (sortBy === 'company') return a.company.localeCompare(b.company);
-                return 0;
-            });
-            
-            displayResults();
-        }
-        
-        function toggleApplied(jobId, isChecked) {
-            if (isChecked) {
-                appliedJobs.add(jobId);
-            } else {
-                appliedJobs.delete(jobId);
+
+        function renderVault() {
+            const vault = document.getElementById('vaultFeed');
+            if(savedJobs.length === 0) {
+                vault.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-800 uppercase font-black tracking-widest text-xs italic">Vault is empty...</div>`;
+                return;
             }
-            saveAppliedJobs();
-            displayResults(); // Refresh to show applied styling
+            vault.innerHTML = savedJobs.map((job, i) => `
+                <div class="bg-zinc-900/30 border border-zinc-800 p-4 rounded-2xl flex justify-between items-center">
+                    <div>
+                        <p class="text-[10px] font-black text-purple-600 uppercase tracking-tighter">${job.date}</p>
+                        <h4 class="text-xs font-bold text-white truncate w-48">${job.title}</h4>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="${job.link}" target="_blank" class="text-[9px] font-black bg-zinc-800 px-3 py-2 rounded-lg hover:bg-purple-600 uppercase">Link</a>
+                        <button onclick="deleteJob(${i})" class="text-[9px] font-black bg-red-900/20 text-red-500 px-3 py-2 rounded-lg uppercase">X</button>
+                    </div>
+                </div>
+            `).join('');
         }
-        
-        function exportToCSV() {
-            const headers = ['Match Score', 'ATS Score', 'Job Title', 'Company', 'Location', 'Salary', 'Date Posted', 'Applied', 'URL'];
-            const rows = filteredJobs.map(job => [
-                job.matchScore || 'N/A',
-                job.atsScore || 'N/A',
-                job.title,
-                job.company,
-                job.location,
-                job.salary,
-                job.datePosted,
-                appliedJobs.has(job.id) ? 'Yes' : 'No',
-                job.url
-            ]);
-            
-            let csv = headers.join(',') + '\n';
-            rows.forEach(row => {
-                csv += row.map(cell => `"${cell}"`).join(',') + '\n';
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `job_search_results_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
+
+        function deleteJob(i) {
+            savedJobs.splice(i, 1);
+            localStorage.setItem('doughVault', JSON.stringify(savedJobs));
+            renderVault();
         }
-        
-        // Auto-populate with example search on load
-        window.addEventListener('load', () => {
-            document.getElementById('jobTitle').value = 'Program Manager, Operations Manager';
-            document.getElementById('location').value = 'Washington DC, Remote';
-            document.getElementById('company').value = 'Google, Meta, Microsoft';
-        });
+
+        function roastResume(title, snippet) {
+            const commonReqs = ["experience", "skills", "team", "development", "management", "years", "degree", "leadership"];
+            const missing = commonReqs.filter(w => !resumeText.includes(w) && snippet.toLowerCase().includes(w));
+            const roast = `ANALYSIS FOR: ${title}\n\nWHY YOU'RE BROKE:\nYour resume is missing these keywords: ${missing.join(", ") || "Actually, you have the keywords, your layout is probably just trash."}\n\nFIX: Insert these into your skills list to get past the bots.`;
+            openModal("The Roast", "Keyword Gap Analysis", roast);
+        }
+
+        function openModal(title, sub, body) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalSub').innerText = sub;
+            document.getElementById('modalBody').innerText = body;
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('copyBtn').onclick = () => { navigator.clipboard.writeText(body); alert("Copied!"); };
+        }
+        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
     </script>
 </body>
 </html>
