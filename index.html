@@ -5,194 +5,171 @@
     <title>Fck is the dough @</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background: #000; color: #fff; }
-        .glass { background: rgba(24, 24, 27, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.2); }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 10px; }
+        body { font-family: 'Inter', sans-serif; background: #000; color: #fff; overflow-x: hidden; }
+        .glass { background: rgba(24, 24, 27, 0.85); backdrop-filter: blur(15px); border: 1px solid rgba(139, 92, 246, 0.3); }
+        .job-card:hover { transform: translateY(-4px); border-color: #9333ea; }
     </style>
 </head>
-<body class="min-h-screen pb-20 px-4">
+<body class="min-h-screen pb-20">
 
     <header class="py-12 text-center">
-        <h1 class="text-6xl md:text-8xl font-black text-purple-600 tracking-tighter italic uppercase drop-shadow-[0_0_20px_rgba(124,58,237,0.4)]">
+        <h1 class="text-6xl md:text-8xl font-black text-purple-600 tracking-tighter italic uppercase drop-shadow-[0_0_20px_rgba(147,51,234,0.5)]">
             Fck is the dough @
         </h1>
-        <p class="text-zinc-500 font-mono mt-2 uppercase tracking-[0.4em] text-[10px]">ATS Optimization • Live Search • Dough Tracker</p>
+        <p class="text-zinc-500 font-mono mt-2 uppercase tracking-[0.5em] text-[10px]">Direct Access Job Portal</p>
     </header>
 
-    <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <main class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-4 gap-8">
         
         <div class="lg:col-span-1 space-y-4">
-            <div class="glass p-6 rounded-[30px] shadow-2xl">
-                <label class="text-[10px] font-black text-purple-400 uppercase tracking-widest">Serper.dev Key</label>
-                <input type="password" id="apiKey" placeholder="Key from serper.dev" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-xs mt-1 mb-4 focus:border-purple-500 outline-none">
+            <div class="glass p-6 rounded-[35px]">
+                <label class="text-[10px] font-black text-purple-400 uppercase tracking-widest">1. Security (Serper.dev)</label>
+                <input type="password" id="apiKey" placeholder="Paste API Key Here" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-xs mt-1 mb-4 outline-none focus:border-purple-500">
                 
-                <label class="text-[10px] font-black text-purple-400 uppercase tracking-widest">Resume (PDF)</label>
-                <input type="file" id="resumeUpload" accept=".pdf" class="block w-full text-[10px] text-zinc-500 file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-purple-600 file:text-white file:font-bold cursor-pointer mt-1"/>
+                <label class="text-[10px] font-black text-purple-400 uppercase tracking-widest">2. Resume Scan</label>
+                <input type="file" id="resumeUpload" accept=".pdf,.docx" class="block w-full text-[10px] text-zinc-500 file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-purple-600 file:text-white cursor-pointer mt-1"/>
             </div>
 
-            <div class="glass p-6 rounded-[30px] space-y-4">
-                <input type="text" id="filterTitle" placeholder="Job Title" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm outline-none focus:border-purple-600">
-                <input type="text" id="filterLoc" placeholder="Location (Remote)" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm outline-none focus:border-purple-600">
-                <button onclick="fetchJobs()" class="w-full bg-purple-600 hover:bg-white hover:text-black font-black py-4 rounded-2xl transition-all uppercase tracking-widest text-xs shadow-lg shadow-purple-600/30">
-                    Search Market
+            <div class="glass p-6 rounded-[35px] space-y-4">
+                <p class="text-[10px] font-black text-zinc-500 uppercase tracking-widest">3. The Requirements</p>
+                <input type="text" id="filterTitle" placeholder="Job Title (e.g. Sales Director)" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm outline-none">
+                <input type="text" id="filterLoc" placeholder="Location (e.g. Remote)" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm outline-none">
+                <input type="text" id="filterCompany" placeholder="Specific Company (Optional)" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm outline-none">
+                
+                <select id="filterSalary" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm outline-none text-zinc-400">
+                    <option value="0">Any Salary</option>
+                    <option value="100000">$100k+</option>
+                    <option value="150000">$150k+</option>
+                    <option value="200000">$200k+</option>
+                </select>
+
+                <button onclick="fetchJobs()" class="w-full bg-purple-600 hover:bg-white hover:text-black font-black py-4 rounded-2xl transition-all uppercase tracking-widest text-sm italic">
+                    Open The Gates
                 </button>
             </div>
         </div>
 
-        <div class="lg:col-span-3 space-y-12">
-            <section>
-                <h2 class="text-xs font-black uppercase tracking-[0.3em] mb-6 text-zinc-500 border-b border-zinc-900 pb-2">Live Opportunities</h2>
-                <div id="jobFeed" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="col-span-full border-2 border-dashed border-zinc-800 rounded-[40px] py-24 text-center text-zinc-700 font-black uppercase tracking-widest">
-                        Awaiting Search...
-                    </div>
+        <div class="lg:col-span-3">
+            <div id="jobFeed" class="grid grid-cols-1 gap-6">
+                <div class="border-2 border-dashed border-zinc-800 rounded-[45px] py-40 text-center text-zinc-700 font-black uppercase tracking-[0.2em] italic">
+                    Ready for Deployment
                 </div>
-            </section>
-
-            <section>
-                <h2 class="text-xs font-black uppercase tracking-[0.3em] mb-6 text-purple-500 border-b border-purple-900/30 pb-2">The Vault (Saved Leads)</h2>
-                <div id="vaultFeed" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    </div>
-            </section>
+            </div>
         </div>
     </main>
 
-    <div id="modal" class="hidden fixed inset-0 bg-black/95 flex items-center justify-center p-6 z-50 backdrop-blur-md">
-        <div class="bg-zinc-900 border border-purple-500/30 p-8 rounded-[40px] max-w-2xl w-full">
-            <h2 id="modalTitle" class="text-3xl font-black mb-2 uppercase italic text-purple-500"></h2>
-            <p id="modalSub" class="text-zinc-500 text-xs font-mono mb-6 uppercase tracking-widest"></p>
-            <div id="modalBody" class="w-full h-64 bg-black border border-zinc-800 p-6 rounded-3xl text-sm font-mono text-zinc-300 mb-6 overflow-y-auto whitespace-pre-wrap leading-relaxed"></div>
-            <div class="flex gap-4">
-                <button id="copyBtn" class="flex-1 bg-white text-black font-black py-4 rounded-2xl uppercase text-xs hover:bg-purple-500 hover:text-white">Copy</button>
-                <button onclick="closeModal()" class="flex-1 bg-zinc-800 text-white font-black py-4 rounded-2xl uppercase text-xs">Dismiss</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        let resumeText = "";
         let resumeWords = [];
-        let savedJobs = JSON.parse(localStorage.getItem('doughVault')) || [];
 
-        // 1. Initialize Vault
-        renderVault();
-
-        // 2. PDF Parsing
         document.getElementById('resumeUpload').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             const reader = new FileReader();
-            reader.onload = async function() {
-                const typedarray = new Uint8Array(this.result);
-                const pdf = await pdfjsLib.getDocument(typedarray).promise;
-                let text = "";
-                for(let i=1; i <= pdf.numPages; i++) {
-                    const page = await pdf.getPage(i);
-                    const content = await page.getTextContent();
-                    text += content.items.map(item => item.str).join(" ");
-                }
-                resumeText = text.toLowerCase();
-                resumeWords = text.toLowerCase().match(/\b(\w{3,})\b/g) || [];
-            };
-            reader.readAsArrayBuffer(file);
+            if (file.type === "application/pdf") {
+                reader.onload = async function() {
+                    const typedarray = new Uint8Array(this.result);
+                    const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                    let text = "";
+                    for(let i=1; i <= pdf.numPages; i++) {
+                        const page = await pdf.getPage(i);
+                        const content = await page.getTextContent();
+                        text += content.items.map(item => item.str).join(" ");
+                    }
+                    finalizeText(text);
+                };
+                reader.readAsArrayBuffer(file);
+            } else {
+                reader.onload = function(event) {
+                    mammoth.extractRawText({arrayBuffer: event.target.result}).then(r => finalizeText(r.value));
+                };
+                reader.readAsArrayBuffer(file);
+            }
         });
 
-        // 3. Search
+        function finalizeText(text) {
+            resumeWords = text.toLowerCase().match(/\b([a-z]{4,})\b/g) || [];
+            alert("RESUME ANALYZED.");
+        }
+
         async function fetchJobs() {
             const key = document.getElementById('apiKey').value;
+            const title = document.getElementById('filterTitle').value;
+            const loc = document.getElementById('filterLoc').value;
+            const comp = document.getElementById('filterCompany').value;
+            const minSal = parseInt(document.getElementById('filterSalary').value);
             const feed = document.getElementById('jobFeed');
-            if(!key) return alert("Missing API Key!");
-            feed.innerHTML = `<div class="col-span-full text-center py-24 text-purple-600 font-black animate-pulse text-2xl uppercase italic">Scanning...</div>`;
+
+            if(!key || !title) return alert("Missing Key or Title!");
+
+            feed.innerHTML = `<div class="text-center py-24 text-purple-600 font-black animate-pulse text-4xl uppercase italic">Pulling Leads...</div>`;
+
+            let q = `"${title}"`;
+            if (loc) q += ` in ${loc}`;
+            if (comp) q += ` site:${comp.toLowerCase().replace(/\s/g, '')}.com OR "${comp}"`;
             
+            // Relevancy boost
+            const skills = [...new Set(resumeWords)].slice(0, 4).join(" ");
+            q += ` ${skills}`;
+
             try {
-                const query = `${document.getElementById('filterTitle').value} jobs ${document.getElementById('filterLoc').value}`;
                 const res = await fetch("https://google.serper.dev/search", {
                     method: 'POST',
                     headers: { 'X-API-KEY': key, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ q: query })
+                    body: JSON.stringify({ q: q, num: 40 })
                 });
                 const data = await res.json();
-                renderJobs(data.organic || []);
-            } catch (err) { feed.innerHTML = "Error loading jobs."; }
+                renderJobs(data.organic || [], minSal);
+            } catch (err) {
+                feed.innerHTML = "SEARCH FAILED.";
+            }
         }
 
-        // 4. Render Jobs
-        function renderJobs(jobs) {
+        function renderJobs(jobs, minSalary) {
             const feed = document.getElementById('jobFeed');
             feed.innerHTML = "";
-            jobs.forEach((job, idx) => {
-                const jobDesc = (job.snippet || "").toLowerCase();
-                const matches = [...new Set(resumeWords)].filter(w => jobDesc.includes(w)).length;
-                const score = Math.min(Math.round((matches / 15) * 100), 98);
+            let count = 0;
+
+            jobs.forEach(job => {
+                const text = (job.title + " " + job.snippet).toLowerCase();
                 
+                // Salary Gate
+                if (minSalary > 0) {
+                    const hasDough = text.includes('k') || text.includes('000') || text.includes('competitive');
+                    if (!hasDough) return;
+                }
+
+                const matches = [...new Set(resumeWords)].filter(w => text.includes(w)).length;
+                const score = Math.min(Math.round((matches / 12) * 100), 99);
+                count++;
+
                 feed.innerHTML += `
-                    <div class="glass p-8 rounded-[35px] hover:border-purple-600 transition-all group">
-                        <div class="flex justify-between items-start mb-6">
-                            <div class="text-3xl font-black ${score > 60 ? 'text-green-500' : 'text-purple-600'}">${score}%</div>
-                            <button onclick="saveToVault('${btoa(job.title)}', '${job.link}')" class="text-xs font-black text-purple-400 hover:text-white uppercase">Save To Vault +</button>
+                    <div class="glass job-card p-10 rounded-[45px] transition-all flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-4 mb-2">
+                                <span class="text-[10px] font-black text-purple-500 uppercase tracking-widest border border-purple-900/50 px-3 py-1 rounded-full">Match Confirmed</span>
+                            </div>
+                            <a href="${job.link}" target="_blank" class="block group">
+                                <h2 class="text-3xl md:text-5xl font-black text-white group-hover:text-purple-400 transition-colors uppercase leading-[0.9] mb-4">
+                                    ${job.title}
+                                </h2>
+                            </a>
+                            <p class="text-zinc-500 text-sm font-medium line-clamp-2 italic">${job.snippet}</p>
                         </div>
-                        <h3 class="font-black text-xl mb-1 truncate">${job.title}</h3>
-                        <p class="text-xs text-zinc-500 mb-6 line-clamp-2">${job.snippet}</p>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="roastResume('${job.title}', '${job.snippet.replace(/'/g, "\\'")}')" class="bg-zinc-900 border border-zinc-800 text-[10px] font-black uppercase py-3 rounded-xl hover:bg-red-900/20">Roast</button>
-                            <a href="${job.link}" target="_blank" class="bg-purple-600 text-[10px] font-black uppercase py-3 rounded-xl text-center">Apply</a>
+                        
+                        <div class="flex flex-col items-center min-w-[150px]">
+                            <div class="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1">ATS Logic</div>
+                            <div class="text-6xl font-black ${score > 50 ? 'text-white' : 'text-zinc-800'} mb-4">${score}%</div>
+                            <a href="${job.link}" target="_blank" class="w-full bg-white text-black text-[12px] font-black uppercase py-4 px-8 rounded-2xl hover:bg-purple-600 hover:text-white transition-all text-center">
+                                Direct Apply
+                            </a>
                         </div>
                     </div>`;
             });
-        }
 
-        // 5. Vault Logic
-        function saveToVault(titleB64, link) {
-            const title = atob(titleB64);
-            if(savedJobs.find(j => j.link === link)) return alert("Already in the vault!");
-            savedJobs.push({ title, link, date: new Date().toLocaleDateString() });
-            localStorage.setItem('doughVault', JSON.stringify(savedJobs));
-            renderVault();
+            if (count === 0) feed.innerHTML = `<div class="text-center py-20 text-zinc-500">No matching dough found. Adjust filters.</div>`;
         }
-
-        function renderVault() {
-            const vault = document.getElementById('vaultFeed');
-            if(savedJobs.length === 0) {
-                vault.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-800 uppercase font-black tracking-widest text-xs italic">Vault is empty...</div>`;
-                return;
-            }
-            vault.innerHTML = savedJobs.map((job, i) => `
-                <div class="bg-zinc-900/30 border border-zinc-800 p-4 rounded-2xl flex justify-between items-center">
-                    <div>
-                        <p class="text-[10px] font-black text-purple-600 uppercase tracking-tighter">${job.date}</p>
-                        <h4 class="text-xs font-bold text-white truncate w-48">${job.title}</h4>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="${job.link}" target="_blank" class="text-[9px] font-black bg-zinc-800 px-3 py-2 rounded-lg hover:bg-purple-600 uppercase">Link</a>
-                        <button onclick="deleteJob(${i})" class="text-[9px] font-black bg-red-900/20 text-red-500 px-3 py-2 rounded-lg uppercase">X</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function deleteJob(i) {
-            savedJobs.splice(i, 1);
-            localStorage.setItem('doughVault', JSON.stringify(savedJobs));
-            renderVault();
-        }
-
-        function roastResume(title, snippet) {
-            const commonReqs = ["experience", "skills", "team", "development", "management", "years", "degree", "leadership"];
-            const missing = commonReqs.filter(w => !resumeText.includes(w) && snippet.toLowerCase().includes(w));
-            const roast = `ANALYSIS FOR: ${title}\n\nWHY YOU'RE BROKE:\nYour resume is missing these keywords: ${missing.join(", ") || "Actually, you have the keywords, your layout is probably just trash."}\n\nFIX: Insert these into your skills list to get past the bots.`;
-            openModal("The Roast", "Keyword Gap Analysis", roast);
-        }
-
-        function openModal(title, sub, body) {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalSub').innerText = sub;
-            document.getElementById('modalBody').innerText = body;
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('copyBtn').onclick = () => { navigator.clipboard.writeText(body); alert("Copied!"); };
-        }
-        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
     </script>
 </body>
 </html>
