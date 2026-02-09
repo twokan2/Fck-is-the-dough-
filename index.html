@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fck is the dough @</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .upload-section {
+            background: #f8f9fa;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .upload-section.dragover {
+            border-color: #4285f4;
+            background: #e8f0fe;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .upload-btn {
+            background: #4285f4;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        
+        .upload-btn:hover {
+            background: #3367d6;
+        }
+        
+        .search-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        input, select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .search-btn {
+            background: #34a853;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        
+        .search-btn:hover {
+            background: #2d8e47;
+        }
+        
+        .search-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        
+        .status.info {
+            background: #e8f0fe;
+            color: #1967d2;
+        }
+        
+        .status.success {
+            background: #e6f4ea;
+            color: #1e8e3e;
+        }
+        
+        .status.error {
+            background: #fce8e6;
+            color: #d93025;
+        }
+        
+        .resume-preview {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .resume-preview h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .keyword {
+            background: #4285f4;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .export-btn {
+            background: #fbbc04;
+            color: #333;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .export-btn:hover {
+            background: #f9ab00;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        th:hover {
+            background: #e8eaed;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .match-score {
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        .ats-score {
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        .match-high {
+            background: #e6f4ea;
+            color: #1e8e3e;
+        }
+        
+        .match-medium {
+            background: #fef7e0;
+            color: #ea8600;
+        }
+        
+        .match-low {
+            background: #f1f3f4;
+            color: #5f6368;
+        }
+        
+        .ats-high {
+            background: #e6f4ea;
+            color: #1e8e3e;
+        }
+        
+        .ats-medium {
+            background: #fef7e0;
+            color: #ea8600;
+        }
+        
+        .ats-low {
+            background: #fce8e6;
+            color: #d93025;
+        }
+        
+        .applied-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .applied-row {
+            background: #e8f5e9 !important;
+        }
+        
+        .applied-label {
+            color: #1e8e3e;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        
+        .job-link {
+            color: #4285f4;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .job-link:hover {
+            text-decoration: underline;
+        }
+        
+        .company-priority {
+            background: #ea4335;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4285f4;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .filters {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💰 Fck is the dough @</h1>
+        <p class="subtitle">Upload your resume and find matching opportunities</p>
+        
+        <div class="upload-section" id="uploadSection">
+            <h3>📄 Upload Resume</h3>
+            <p style="margin: 10px 0; color: #666;">Drag and drop your resume here, or click to browse</p>
+            <input type="file" id="resumeInput" accept=".pdf,.doc,.docx,.txt">
+            <button class="upload-btn" onclick="document.getElementById('resumeInput').click()">
+                Choose File
+            </button>
+            <p id="fileName" style="margin-top: 10px; color: #666;"></p>
+        </div>
+        
+        <div id="resumePreview" style="display: none;"></div>
+        
+        <div class="search-controls">
+            <div class="control-group">
+                <label for="jobTitle">Job Title/Keywords</label>
+                <input type="text" id="jobTitle" placeholder="e.g., Operations Manager, Program Manager">
+            </div>
+            
+            <div class="control-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" placeholder="e.g., Washington DC, Remote">
+            </div>
+            
+            <div class="control-group">
+                <label for="company">Company (Optional)</label>
+                <input type="text" id="company" placeholder="e.g., Google, Meta, Microsoft">
+            </div>
+            
+            <div class="control-group">
+                <label for="experienceLevel">Experience Level</label>
+                <select id="experienceLevel">
+                    <option value="">Any</option>
+                    <option value="entry">Entry Level</option>
+                    <option value="mid">Mid Level</option>
+                    <option value="senior" selected>Senior Level</option>
+                    <option value="director">Director+</option>
+                </select>
+            </div>
+        </div>
+        
+        <button class="search-btn" id="searchBtn" onclick="searchJobs()">
+            🔍 Search Jobs
+        </button>
+        
+        <div id="statusMessage"></div>
+        
+        <div id="resultsSection" style="display: none;">
+            <div class="results-header">
+                <h2 id="resultsCount">Found 0 jobs</h2>
+                <button class="export-btn" onclick="exportToCSV()">
+                    📊 Export to CSV
+                </button>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-row">
+                    <div class="control-group">
+                        <label for="filterCompany">Filter by Company</label>
+                        <select id="filterCompany" onchange="applyFilters()">
+                            <option value="">All Companies</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="filterLocation">Filter by Location</label>
+                        <select id="filterLocation" onchange="applyFilters()">
+                            <option value="">All Locations</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="filterMatch">Minimum Match Score</label>
+                        <select id="filterMatch" onchange="applyFilters()">
+                            <option value="0">Any Match</option>
+                            <option value="60">60%+</option>
+                            <option value="70">70%+</option>
+                            <option value="80">80%+</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="sortBy">Sort By</label>
+                        <select id="sortBy" onchange="applyFilters()">
+                            <option value="match">Match Score</option>
+                            <option value="date">Date Posted</option>
+                            <option value="company">Company</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="resultsTable"></div>
+        </div>
+    </div>
+
+    <script>
+        let resumeData = null;
+        let allJobs = [];
+        let filteredJobs = [];
+        const priorityCompanies = ['google', 'meta', 'microsoft', 'amazon', 'apple'];
+        let appliedJobs = new Set(); // Track which jobs have been applied to
+        
+        // Load applied jobs from localStorage on startup
+        function loadAppliedJobs() {
+            const saved = localStorage.getItem('appliedJobs');
+            if (saved) {
+                appliedJobs = new Set(JSON.parse(saved));
+            }
+        }
+        
+        // Save applied jobs to localStorage
+        function saveAppliedJobs() {
+            localStorage.setItem('appliedJobs', JSON.stringify([...appliedJobs]));
+        }
+        
+        // Load on page load
+        loadAppliedJobs();
+        
+        // File upload handling
+        const uploadSection = document.getElementById('uploadSection');
+        const resumeInput = document.getElementById('resumeInput');
+        const fileName = document.getElementById('fileName');
+        
+        uploadSection.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadSection.classList.add('dragover');
+        });
+        
+        uploadSection.addEventListener('dragleave', () => {
+            uploadSection.classList.remove('dragover');
+        });
+        
+        uploadSection.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadSection.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileUpload(files[0]);
+            }
+        });
+        
+        resumeInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files[0]);
+            }
+        });
+        
+        function handleFileUpload(file) {
+            fileName.textContent = `Selected: ${file.name}`;
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const text = e.target.result;
+                parseResume(text, file.name);
+            };
+            
+            reader.readAsText(file);
+        }
+        
+        function parseResume(text, filename) {
+            // Extract keywords and skills from resume
+            const keywords = extractKeywords(text);
+            
+            resumeData = {
+                filename: filename,
+                fullText: text,
+                keywords: keywords,
+                skills: extractSkills(text),
+                experience: extractExperience(text)
+            };
+            
+            displayResumePreview();
+            showStatus('Resume processed successfully! Ready to search.', 'success');
+            
+            // Auto-populate search fields
+            document.getElementById('jobTitle').value = suggestJobTitles(text);
+        }
+        
+        function extractKeywords(text) {
+            // Common tech/operations keywords
+            const commonKeywords = [
+                'operations', 'program manager', 'strategic', 'data', 'sql', 'tableau',
+                'aws', 'leadership', 'cross-functional', 'analytics', 'compliance',
+                'government', 'policy', 'budget', 'stakeholder', 'transformation',
+                'p&l', 'customer experience', 'digital', 'automation', 'project management',
+                'regulatory', 'licensing', 'azure', 'cloud', 'logistics', 'risk management'
+            ];
+            
+            const found = commonKeywords.filter(keyword => 
+                text.toLowerCase().includes(keyword.toLowerCase())
+            );
+            
+            return [...new Set(found)].slice(0, 15);
+        }
+        
+        function extractSkills(text) {
+            const skillPatterns = [
+                'SQL', 'Tableau', 'AWS', 'Azure', 'Python', 'Excel', 'PowerBI',
+                'Salesforce', 'SAP', 'Project Management', 'Agile', 'Scrum'
+            ];
+            
+            return skillPatterns.filter(skill => 
+                text.toLowerCase().includes(skill.toLowerCase())
+            );
+        }
+        
+        function extractExperience(text) {
+            // Simple experience level detection
+            if (text.includes('Director') || text.includes('Senior Director')) return 'director';
+            if (text.includes('Senior') || text.includes('Lead')) return 'senior';
+            if (text.includes('Deputy')) return 'senior';
+            return 'mid';
+        }
+        
+        function suggestJobTitles(text) {
+            if (text.toLowerCase().includes('program manager') || text.toLowerCase().includes('operations')) {
+                return 'Program Manager, Operations Manager';
+            }
+            return '';
+        }
+        
+        function displayResumePreview() {
+            const preview = document.getElementById('resumePreview');
+            preview.style.display = 'block';
+            preview.innerHTML = `
+                <div class="resume-preview">
+                    <h3>✅ Resume Loaded: ${resumeData.filename}</h3>
+                    <p><strong>Detected Keywords:</strong></p>
+                    <div class="keywords">
+                        ${resumeData.keywords.map(kw => `<span class="keyword">${kw}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+            statusDiv.style.display = 'block';
+        }
+        
+        async function searchJobs() {
+            const jobTitle = document.getElementById('jobTitle').value;
+            const location = document.getElementById('location').value;
+            const company = document.getElementById('company').value;
+            
+            if (!jobTitle && !resumeData) {
+                showStatus('Please upload a resume or enter job keywords', 'error');
+                return;
+            }
+            
+            showStatus('Searching for jobs...', 'info');
+            document.getElementById('searchBtn').disabled = true;
+            
+            try {
+                // Combine multiple job sources
+                const jobs = await Promise.all([
+                    fetchGoogleJobs(jobTitle, location, company),
+                    fetchIndeedJobs(jobTitle, location, company),
+                    fetchRemoteOKJobs(jobTitle)
+                ]);
+                
+                allJobs = jobs.flat();
+                
+                // Calculate match scores if resume is uploaded
+                if (resumeData) {
+                    allJobs = allJobs.map(job => ({
+                        ...job,
+                        matchScore: calculateMatchScore(job, resumeData),
+                        atsScore: calculateATSScore(job, resumeData)
+                    }));
+                }
+                
+                // Sort by match score
+                allJobs.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
+                
+                filteredJobs = [...allJobs];
+                displayResults();
+                
+                showStatus(`Found ${allJobs.length} matching jobs!`, 'success');
+            } catch (error) {
+                showStatus('Error searching jobs. Please try again.', 'error');
+                console.error(error);
+            } finally {
+                document.getElementById('searchBtn').disabled = false;
+            }
+        }
+        
+        async function fetchGoogleJobs(title, location, company) {
+            // Using Google Jobs API via SerpAPI-like structure
+            // In production, you'd use actual API keys
+            const query = `${title} ${company} ${location}`.trim();
+            
+            // Mock data for demonstration - in production, use real API
+            return generateMockJobs('Google Jobs API', query, 10);
+        }
+        
+        async function fetchIndeedJobs(title, location, company) {
+            // Mock Indeed data
+            return generateMockJobs('Indeed', `${title} ${location}`, 8);
+        }
+        
+        async function fetchRemoteOKJobs(title) {
+            // Mock Remote OK data
+            return generateMockJobs('RemoteOK', title, 5);
+        }
+        
+        function generateMockJobs(source, query, count) {
+            const companies = [
+                'Google', 'Meta', 'Microsoft', 'Amazon', 'Apple', 'Salesforce',
+                'Adobe', 'Oracle', 'SAP', 'IBM', 'Cisco', 'Intel', 'NVIDIA'
+            ];
+            
+            const titles = [
+                'Senior Program Manager, Operations',
+                'Strategic Operations Manager',
+                'Senior Operations Lead',
+                'Program Manager, Strategic Initiatives',
+                'Operations Manager, Data Centers',
+                'Chief of Staff, Operations',
+                'Senior Manager, Business Operations',
+                'Director of Strategic Programs',
+                'Operations Manager, Cloud Infrastructure',
+                'Program Manager, Risk & Compliance'
+            ];
+            
+            const locations = [
+                'Washington, DC', 'Remote', 'Seattle, WA', 'San Francisco, CA',
+                'New York, NY', 'Austin, TX', 'Boston, MA', 'Chicago, IL'
+            ];
+            
+            const jobs = [];
+            for (let i = 0; i < count; i++) {
+                const company = companies[Math.floor(Math.random() * companies.length)];
+                jobs.push({
+                    id: `${source}-${Date.now()}-${i}`,
+                    title: titles[Math.floor(Math.random() * titles.length)],
+                    company: company,
+                    location: locations[Math.floor(Math.random() * locations.length)],
+                    salary: Math.random() > 0.3 ? `$${120 + Math.floor(Math.random() * 80)}K - $${180 + Math.floor(Math.random() * 120)}K` : 'Not specified',
+                    url: `https://careers.${company.toLowerCase().replace(/\s/g, '')}.com/job/${i}`,
+                    datePosted: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    description: `Lead cross-functional teams, manage strategic operations initiatives, drive data-driven decisions using SQL and analytics tools. Strong stakeholder management and P&L accountability required.`,
+                    source: source
+                });
+            }
+            
+            return jobs;
+        }
+        
+        function calculateMatchScore(job, resume) {
+            let score = 0;
+            const jobText = `${job.title} ${job.description} ${job.company}`.toLowerCase();
+            
+            // Keyword matching
+            const matchedKeywords = resume.keywords.filter(kw => 
+                jobText.includes(kw.toLowerCase())
+            );
+            score += (matchedKeywords.length / resume.keywords.length) * 60;
+            
+            // Priority company boost
+            if (priorityCompanies.some(pc => job.company.toLowerCase().includes(pc))) {
+                score += 20;
+            }
+            
+            // Location preference (DC area or Remote)
+            if (job.location.includes('DC') || job.location.includes('Remote')) {
+                score += 10;
+            }
+            
+            // Senior level preference
+            if (job.title.toLowerCase().includes('senior') || 
+                job.title.toLowerCase().includes('director') ||
+                job.title.toLowerCase().includes('lead')) {
+                score += 10;
+            }
+            
+            return Math.min(Math.round(score), 100);
+        }
+        
+        function calculateATSScore(job, resume) {
+            let score = 0;
+            const jobText = `${job.title} ${job.description}`.toLowerCase();
+            const resumeText = resume.fullText.toLowerCase();
+            
+            // 1. Keyword Density (40 points)
+            const jobKeywords = extractJobKeywords(job);
+            const matchedKeywords = jobKeywords.filter(kw => resumeText.includes(kw.toLowerCase()));
+            score += (matchedKeywords.length / Math.max(jobKeywords.length, 1)) * 40;
+            
+            // 2. Technical Skills Match (30 points)
+            const technicalTerms = ['sql', 'tableau', 'aws', 'azure', 'python', 'excel', 
+                                   'project management', 'agile', 'scrum', 'salesforce'];
+            const jobTechTerms = technicalTerms.filter(term => jobText.includes(term));
+            const resumeTechTerms = technicalTerms.filter(term => resumeText.includes(term));
+            const techMatch = jobTechTerms.filter(term => resumeTechTerms.includes(term));
+            if (jobTechTerms.length > 0) {
+                score += (techMatch.length / jobTechTerms.length) * 30;
+            } else {
+                score += 30; // No tech requirements
+            }
+            
+            // 3. Title/Role Alignment (20 points)
+            const jobTitleWords = job.title.toLowerCase().split(/\s+/);
+            const resumeTitleMatch = jobTitleWords.filter(word => 
+                resumeText.includes(word) && word.length > 3
+            );
+            score += (resumeTitleMatch.length / Math.max(jobTitleWords.length, 1)) * 20;
+            
+            // 4. Experience Level Match (10 points)
+            const hasExperienceMatch = 
+                (job.title.toLowerCase().includes('senior') && resumeText.includes('senior')) ||
+                (job.title.toLowerCase().includes('director') && resumeText.includes('director')) ||
+                (job.title.toLowerCase().includes('lead') && resumeText.includes('lead'));
+            if (hasExperienceMatch) score += 10;
+            
+            return Math.min(Math.round(score), 100);
+        }
+        
+        function extractJobKeywords(job) {
+            // Extract key terms from job description
+            const text = `${job.title} ${job.description}`.toLowerCase();
+            const keywords = [];
+            
+            const commonTerms = [
+                'operations', 'program', 'strategic', 'data', 'analytics', 'leadership',
+                'cross-functional', 'stakeholder', 'budget', 'compliance', 'policy',
+                'transformation', 'customer', 'digital', 'automation', 'project',
+                'regulatory', 'risk', 'logistics', 'cloud', 'experience'
+            ];
+            
+            commonTerms.forEach(term => {
+                if (text.includes(term)) keywords.push(term);
+            });
+            
+            return keywords;
+        }
+        
+        function displayResults() {
+            const resultsSection = document.getElementById('resultsSection');
+            resultsSection.style.display = 'block';
+            
+            document.getElementById('resultsCount').textContent = `Found ${filteredJobs.length} jobs`;
+            
+            // Populate filter dropdowns
+            populateFilters();
+            
+            // Create table
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable('matchScore')">Match %</th>
+                            <th onclick="sortTable('atsScore')">ATS Score</th>
+                            <th onclick="sortTable('title')">Job Title</th>
+                            <th onclick="sortTable('company')">Company</th>
+                            <th onclick="sortTable('location')">Location</th>
+                            <th onclick="sortTable('salary')">Salary</th>
+                            <th onclick="sortTable('datePosted')">Posted</th>
+                            <th>Applied</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            filteredJobs.forEach(job => {
+                const matchClass = job.matchScore >= 80 ? 'match-high' : 
+                                  job.matchScore >= 60 ? 'match-medium' : 'match-low';
+                const atsClass = job.atsScore >= 75 ? 'ats-high' :
+                                job.atsScore >= 50 ? 'ats-medium' : 'ats-low';
+                const isPriority = priorityCompanies.some(pc => job.company.toLowerCase().includes(pc));
+                const isApplied = appliedJobs.has(job.id);
+                const rowClass = isApplied ? 'applied-row' : '';
+                
+                html += `
+                    <tr class="${rowClass}">
+                        <td><span class="match-score ${matchClass}">${job.matchScore || 'N/A'}%</span></td>
+                        <td><span class="ats-score ${atsClass}">${job.atsScore || 'N/A'}%</span></td>
+                        <td><strong>${job.title}</strong></td>
+                        <td>
+                            ${job.company}
+                            ${isPriority ? '<span class="company-priority">TARGET</span>' : ''}
+                        </td>
+                        <td>${job.location}</td>
+                        <td>${job.salary}</td>
+                        <td>${job.datePosted}</td>
+                        <td>
+                            <input type="checkbox" 
+                                   class="applied-checkbox" 
+                                   ${isApplied ? 'checked' : ''}
+                                   onchange="toggleApplied('${job.id}', this.checked)">
+                            ${isApplied ? '<div class="applied-label">✓ Applied</div>' : ''}
+                        </td>
+                        <td><a href="${job.url}" target="_blank" class="job-link">Apply →</a></td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('resultsTable').innerHTML = html;
+        }
+        
+        function populateFilters() {
+            // Companies
+            const companies = [...new Set(allJobs.map(j => j.company))].sort();
+            const companySelect = document.getElementById('filterCompany');
+            companySelect.innerHTML = '<option value="">All Companies</option>' +
+                companies.map(c => `<option value="${c}">${c}</option>`).join('');
+            
+            // Locations
+            const locations = [...new Set(allJobs.map(j => j.location))].sort();
+            const locationSelect = document.getElementById('filterLocation');
+            locationSelect.innerHTML = '<option value="">All Locations</option>' +
+                locations.map(l => `<option value="${l}">${l}</option>`).join('');
+        }
+        
+        function applyFilters() {
+            const companyFilter = document.getElementById('filterCompany').value;
+            const locationFilter = document.getElementById('filterLocation').value;
+            const matchFilter = parseInt(document.getElementById('filterMatch').value);
+            const sortBy = document.getElementById('sortBy').value;
+            
+            filteredJobs = allJobs.filter(job => {
+                if (companyFilter && job.company !== companyFilter) return false;
+                if (locationFilter && job.location !== locationFilter) return false;
+                if (matchFilter && (job.matchScore || 0) < matchFilter) return false;
+                return true;
+            });
+            
+            // Sort
+            filteredJobs.sort((a, b) => {
+                if (sortBy === 'match') return (b.matchScore || 0) - (a.matchScore || 0);
+                if (sortBy === 'date') return new Date(b.datePosted) - new Date(a.datePosted);
+                if (sortBy === 'company') return a.company.localeCompare(b.company);
+                return 0;
+            });
+            
+            displayResults();
+        }
+        
+        function toggleApplied(jobId, isChecked) {
+            if (isChecked) {
+                appliedJobs.add(jobId);
+            } else {
+                appliedJobs.delete(jobId);
+            }
+            saveAppliedJobs();
+            displayResults(); // Refresh to show applied styling
+        }
+        
+        function exportToCSV() {
+            const headers = ['Match Score', 'ATS Score', 'Job Title', 'Company', 'Location', 'Salary', 'Date Posted', 'Applied', 'URL'];
+            const rows = filteredJobs.map(job => [
+                job.matchScore || 'N/A',
+                job.atsScore || 'N/A',
+                job.title,
+                job.company,
+                job.location,
+                job.salary,
+                job.datePosted,
+                appliedJobs.has(job.id) ? 'Yes' : 'No',
+                job.url
+            ]);
+            
+            let csv = headers.join(',') + '\n';
+            rows.forEach(row => {
+                csv += row.map(cell => `"${cell}"`).join(',') + '\n';
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `job_search_results_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+        
+        // Auto-populate with example search on load
+        window.addEventListener('load', () => {
+            document.getElementById('jobTitle').value = 'Program Manager, Operations Manager';
+            document.getElementById('location').value = 'Washington DC, Remote';
+            document.getElementById('company').value = 'Google, Meta, Microsoft';
+        });
+    </script>
+</body>
+</html>
